@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title>flygis</title>
+
+		<style>
+			.div_main {
+				width: 100%;
+				height: 100%;
+			}
+			
+			.div_mapContainer {
+				width: 100%;
+				height: 90%;
+			}
+			
+			.div_menu {
+				width: 100%;
+				height: 10%;
+			}
+			
+			.mouse-position-wrapper {
+				width: 330px;
+				height: 20px;
+				color: #000000;
+				position: absolute;
+				right: 30px;
+				bottom: 10px;
+				z-index: 999;
+				background-color: rgba(159, 197, 232, 0.5);
+			}
+		</style>
+
+		<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script type="text/javascript" src="js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="js/ol.js"></script>
+
+		<link rel="stylesheet" href="css/bootstrap.min.css" />
+		<link rel="stylesheet" href="css/defaults.css" />
+		<link rel="stylesheet" href="css/ol.css" />
+
+	</head>
+
+	<body>
+		<div id="main" class="div_main" align="center">
+			<div id="menu" class="div_menu" align="center">
+<b style="font-size: 3em;">请描述您的需求？</b>
+			</div>
+			<div id="mapContainer" class="div_mapContainer"></div>
+
+			<div id="mouse-position" class="mouse-position-wrapper">
+
+			</div>
+		</div>
+		<script type="application/javascript">
+//			$(function() {
+//				window.onload = function() {
+					var view = new ol.View({
+						logo: false,
+						projection: ol.proj.get("EPSG:4326"),
+						zoom: 11, //初始化地图级别
+						rotation: 0, //地图旋转弧度，默认为0，最大2π
+						center: [118.776, 32.06], //初始化地图中心点
+						minZoom: 3,
+						maxZoom: 18
+					});
+					var layers = [];
+					var layer1 = new ol.layer.Tile({
+						source: new ol.source.XYZ({
+							url: 'http://t0.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=03de8518ec04ca0c31edde5200e082f0'
+						}),
+						isGroup: true,
+						name: '矢量底图'
+					});
+					var layer2 = new ol.layer.Tile({
+						source: new ol.source.XYZ({
+							url: 'http://t0.tianditu.com/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=03de8518ec04ca0c31edde5200e082f0'
+						}),
+						isGroup: true,
+						name: '天地图文字标注'
+					});
+					layers.push(layer1);
+					layers.push(layer2);
+					//定义地图
+					var map = new ol.Map({
+						layers: layers,
+						view: view,
+						target: "mapContainer",
+						loadTilesWhileInteracting: true,
+						logo: false,
+						controls: ol.control.defaults({
+							attribution: false,
+							rotate: false,
+							zoom: true
+						}).extend([
+							//			new ol.control.FullScreen(),
+							//			new ol.control.OverviewMap(),
+							new ol.control.Zoom(),
+							new ol.control.ScaleLine({
+								units: 'metric' //degrees
+							}),
+							new ol.control.MousePosition({
+								coordinateFormat: ol.coordinate.createStringXY(8),
+								projection: ol.proj.get('EPSG:4326'),
+								className: 'custom-mouse-position',
+								target: document.getElementById('mouse-position')
+							})
+						])
+					});
+//				}
+
+//			})
+		</script>
+	</body>
+
+</html>
